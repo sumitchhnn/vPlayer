@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>Video Player Plugin</title>
+		<link rel="stylesheet" href="assets/css/style.css">
+	</head>
+	<body>
+		<div id="video-container">
+		</div>
+	</body>
+	<script src="assets/js/vplayer.js"></script>
+	<script>
+		vPlayer.config({
+			'elementClass' : 'video-container',
+			'controls' : true,
+			'playListEnabled' : true,
+			'playList'  : '',
+			'src' : 'assets/video/nicole.mp4',
+			'videoPlayerCss' : 'vPlayer'
+		});
+	</script>
+</html>
