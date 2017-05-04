@@ -5,21 +5,16 @@ vPlayer = {
 	container : {},
 	vPlayerContainer : {},
 	video : {},
-	playerList: {
-		"firstVideo"  : "assets/video/bilal.mp4",
-		"secondVideo" : "assets/video/ishq.mp4",
-		"thirdVideo" : "assets/video/nicole.mp4",
-		"fourthVideo"  : "assets/video/bilal.mp4",
-		"fifthVideo" : "assets/video/ishq.mp4",
-		"sixthVideo" : "assets/video/nicole.mp4"
-		
-	},
+	playerList: {},
 	config : function (configuration) {
 		for(var key in configuration) {
 			vPlayer.vplayerConfig[key] = configuration[key];
 		}
 		vPlayer.appendVideoElement();
 		if(vPlayer.vplayerConfig.playListEnabled){
+			for(var key in configuration.playList) {
+				vPlayer.playerList[key] = configuration.playList[key];
+			}
 			vPlayer.vPlayerList();
 		}
 		if(vPlayer.vplayerConfig.controls){
@@ -36,7 +31,7 @@ vPlayer = {
 		vPlayer.video = document.createElement('video');
 		var source = document.createElement('source');
 		vPlayer.video.setAttribute('id' , 'videoPlayer');
-		source.src = vPlayer.vplayerConfig.src;
+		source.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.src;
 		source.type = 'video/mp4';
 		
 		vPlayer.video.appendChild(source);
@@ -54,6 +49,7 @@ vPlayer = {
 			var playListContainer = document.createElement('div');
 			playListContainer.appendChild(document.createTextNode(vPlayer.playerList[listKey]));
 			list.appendChild(playListContainer);
+			list.addEventListener('click', vPlayer.playListEvent);
 			vPlayerList.append(list);
 		}
 		document.getElementById('vPlayer-container').appendChild(listContainer);
@@ -97,20 +93,22 @@ vPlayer = {
 	},
 	nextVideo : function () {
 		if(vPlayer.video.currentTime !== 0 ) {
-			vPlayer.video.currentTime = vPlayer.video.duration + 1000;
+			var key = vPlayer.nextOperation();
+			vPlayer.video.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
 			progressBar.value = vPlayer.video.currentTime;
-			vPlayer.playPauseToggle();
+			vPlayer.video.play();
 		}
 	},
 	prevVideo : function () {
 		if(vPlayer.video.currentTime !== 0) {
-			vPlayer.video.currentTime = 0;
+			var key = vPlayer.prevOperation();
+			vPlayer.video.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
 			vPlayer.video.play();
 		}
 	},
 	updateProgressBar : function () {
 		var percentage = Math.floor((100 / vPlayer.video.duration) * vPlayer.video.currentTime);
-		if (!isNaN(percentage) || !(percentage === " ")) {
+		if (!isNaN(percentage)) {
 			document.getElementById('progressBar').value = percentage;
 			document.getElementById('progressBar').innerHTML = percentage + '% played';
 		}
@@ -141,5 +139,43 @@ vPlayer = {
 			pauseButton.classList.add('playPauseVideo');
 			playButton.classList.add('playVideo');
 		}
+	},
+	playListEvent : function () {
+		var key ="";
+		for(var list in vPlayer.vplayerConfig.playList) {
+			if(vPlayer.vplayerConfig.playList[list] === this.children[0].innerText) {
+				key = list;
+			}
+		}
+		vPlayer.video.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+		vPlayer.video.play();
+	},
+	nextOperation : function () {
+		var currentKey = vPlayer.extractKey();
+		var keys = Object.keys(vPlayer.vplayerConfig.playList);
+		for(var i = 0; i < keys.length; i++ ) {
+			if(keys[i] === currentKey) {
+				return keys[i+1];
+			}
+		}
+		return null;
+	},
+	prevOperation : function () {
+		var currentKey = vPlayer.extractKey();
+		var keys = Object.keys(vPlayer.vplayerConfig.playList);
+		for(var i = 0; i < keys.length; i++ ) {
+			if(keys[i] === currentKey) {
+				return keys[i];
+			}
+		}
+		return null;
+	},
+	extractKey : function() {
+		for(var list in vPlayer.vplayerConfig.playList) {
+			if(vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[list] === vPlayer.video.children[0].attributes["0"].value) {
+				return list;
+			}
+		}
+		return null;
 	}
 }; 

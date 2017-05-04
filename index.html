@@ -9,13 +9,17 @@
 	</body>
 	<script src="assets/js/vplayer.js"></script>
 	<script>
+		var playList = {'first':'Pitbull.mp4',
+						'second':'nicole.mp4',
+						'third':'Enrique.mp4'};
 		vPlayer.config({
 			'elementClass' : 'video-container',
 			'controls' : true,
 			'playListEnabled' : true,
-			'playList'  : '',
-			'src' : 'assets/video/nicole.mp4',
-			'videoPlayerCss' : 'vPlayer'
+			'playList'  : playList,
+			'src' : 'Enrique.mp4',
+			'videoPlayerCss' : 'vPlayer',
+			'sourcePath' : 'assets/video/' 
 		});
 	</script>
 </html>
