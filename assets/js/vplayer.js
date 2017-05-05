@@ -92,17 +92,24 @@ vPlayer = {
 		vPlayer.video.onended = vPlayer.stopEvents();
 	},
 	nextVideo : function () {
+		console.log(vPlayer.video.children[0].attributes[0]);
 		if(vPlayer.video.currentTime !== 0 ) {
 			var key = vPlayer.nextOperation();
-			vPlayer.video.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+			if(key !== undefined) {
+				vPlayer.video.children[0].attributes[0].value = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+			}
 			progressBar.value = vPlayer.video.currentTime;
+			vPlayer.video.load();
 			vPlayer.video.play();
 		}
 	},
 	prevVideo : function () {
 		if(vPlayer.video.currentTime !== 0) {
 			var key = vPlayer.prevOperation();
-			vPlayer.video.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+			if(key !== undefined) {
+				vPlayer.video.children[0].attributes[0].value = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+			}
+			vPlayer.video.load();
 			vPlayer.video.play();
 		}
 	},
@@ -147,7 +154,8 @@ vPlayer = {
 				key = list;
 			}
 		}
-		vPlayer.video.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+		vPlayer.video.children[0].attributes[0].value = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
+		vPlayer.video.load();
 		vPlayer.video.play();
 	},
 	nextOperation : function () {
@@ -165,7 +173,7 @@ vPlayer = {
 		var keys = Object.keys(vPlayer.vplayerConfig.playList);
 		for(var i = 0; i < keys.length; i++ ) {
 			if(keys[i] === currentKey) {
-				return keys[i];
+				return keys[i-1];
 			}
 		}
 		return null;
