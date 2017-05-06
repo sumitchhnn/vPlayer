@@ -38,6 +38,7 @@ vPlayer = {
 		vPlayer.vPlayerContainer.appendChild(vPlayer.video);
 		vPlayer.container.appendChild(vPlayer.vPlayerContainer);
 		vPlayer.video.play();
+		vPlayer.video.addEventListener('play', vPlayer.playPauseToggle);
 	},
 	vPlayerList : function () {
 		var listContainer = document.createElement('div');
@@ -78,6 +79,7 @@ vPlayer = {
 		document.getElementById('controls4').addEventListener('click', vPlayer.stopVideo);
 		document.getElementById('controls2').addEventListener('click', vPlayer.nextVideo);
 		document.getElementById('controls0').addEventListener('click', vPlayer.prevVideo);
+		document.getElementById('progressBar').addEventListener('click',vPlayer.progressBarEvent);
 	},
 	pauseVideo : function () {
 		vPlayer.video.pause();
@@ -92,7 +94,6 @@ vPlayer = {
 		vPlayer.video.onended = vPlayer.stopEvents();
 	},
 	nextVideo : function () {
-		console.log(vPlayer.video.children[0].attributes[0]);
 		if(vPlayer.video.currentTime !== 0 ) {
 			var key = vPlayer.nextOperation();
 			if(key !== undefined) {
@@ -130,7 +131,7 @@ vPlayer = {
 		var playButton = document.getElementById('controls3');
 		var pauseButton = document.getElementById('controls1');
 		var style = window.getComputedStyle(document.getElementById('controls3'));
-		if(style.getPropertyValue('display') === 'none'){
+		if(style.getPropertyValue('display') === 'none' && vPlayer.video.currentTime === 0){
 			pauseButton.classList.add('playPauseVideo');
 			playButton.classList.add('playVideo');
 		} else {
@@ -185,5 +186,11 @@ vPlayer = {
 			}
 		}
 		return null;
+	},
+	progressBarEvent : function(event) {
+		var progressBar = document.getElementById('progressBar');
+        var clickedValue = (event.offsetX / this.offsetWidth);
+		vPlayer.video.currentTime = clickedValue * vPlayer.video.duration;
+		progressBar.value = clickedValue/100;
 	}
 }; 
