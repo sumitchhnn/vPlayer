@@ -38,7 +38,10 @@ vPlayer = {
 		vPlayer.vPlayerContainer.appendChild(vPlayer.video);
 		vPlayer.container.appendChild(vPlayer.vPlayerContainer);
 		vPlayer.video.play();
-		vPlayer.video.addEventListener('play', vPlayer.playPauseToggle);
+		vPlayer.video.addEventListener('onplaying', function () {
+			pauseButton.classList.add('playPauseVideo');
+			playButton.classList.add('playVideo');
+		});
 	},
 	vPlayerList : function () {
 		var listContainer = document.createElement('div');
@@ -131,7 +134,7 @@ vPlayer = {
 		var playButton = document.getElementById('controls3');
 		var pauseButton = document.getElementById('controls1');
 		var style = window.getComputedStyle(document.getElementById('controls3'));
-		if(style.getPropertyValue('display') === 'none' && vPlayer.video.currentTime === 0){
+		if(style.getPropertyValue('display') === 'none'){
 			pauseButton.classList.add('playPauseVideo');
 			playButton.classList.add('playVideo');
 		} else {
