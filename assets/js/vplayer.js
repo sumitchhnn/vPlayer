@@ -42,6 +42,7 @@ vPlayer = {
 			pauseButton.classList.add('playPauseVideo');
 			playButton.classList.add('playVideo');
 		});
+		vPlayer.video.addEventListener('ended', vPlayer.nextVideo);
 	},
 	vPlayerList : function () {
 		var listContainer = document.createElement('div');
