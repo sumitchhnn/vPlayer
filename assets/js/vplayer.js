@@ -30,7 +30,7 @@ vPlayer = {
 		
 		vPlayer.video = document.createElement('video');
 		var source = document.createElement('source');
-		vPlayer.video.setAttribute('id' , 'videoPlayer');
+		vPlayer.video.setAttribute('class' , 'videoPlayer');
 		source.src = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.src;
 		source.type = 'video/mp4';
 		
@@ -39,8 +39,8 @@ vPlayer = {
 		vPlayer.container.appendChild(vPlayer.vPlayerContainer);
 		vPlayer.video.play();
 		vPlayer.video.addEventListener('onplaying', function () {
-			pauseButton.classList.add('playPauseVideo');
-			playButton.classList.add('playVideo');
+			pauseButton.classList.add('hide');
+			playButton.classList.add('show');
 		});
 		vPlayer.video.addEventListener('ended', vPlayer.nextVideo);
 	},
@@ -63,7 +63,7 @@ vPlayer = {
 		var controlsContainer = document.createElement('ul');
 		controlsContainer.id = 'controls';
 		vPlayer.vPlayerContainer.appendChild(controlsContainer);
-		for(var i=0; i< 5; i++) {
+		for(var i=0; i < 7; i++) {
 			var controls = document.createElement('li');
 			controls.id = 'controls' + i;
 			controlsContainer.appendChild(controls);
@@ -83,6 +83,8 @@ vPlayer = {
 		document.getElementById('controls4').addEventListener('click', vPlayer.stopVideo);
 		document.getElementById('controls2').addEventListener('click', vPlayer.nextVideo);
 		document.getElementById('controls0').addEventListener('click', vPlayer.prevVideo);
+		document.getElementById('controls5').addEventListener('click', vPlayer.zoomInOut);
+		document.getElementById('controls6').addEventListener('click', vPlayer.zoomInOut);
 		document.getElementById('progressBar').addEventListener('click',vPlayer.progressBarEvent);
 	},
 	pauseVideo : function () {
@@ -136,20 +138,34 @@ vPlayer = {
 		var pauseButton = document.getElementById('controls1');
 		var style = window.getComputedStyle(document.getElementById('controls3'));
 		if(style.getPropertyValue('display') === 'none'){
-			pauseButton.classList.add('playPauseVideo');
-			playButton.classList.add('playVideo');
+			pauseButton.classList.add('hide');
+			playButton.classList.add('show');
 		} else {
-			pauseButton.classList.remove('playPauseVideo');
-			playButton.classList.remove('playVideo');
+			pauseButton.classList.remove('hide');
+			playButton.classList.remove('show');
 		} 
+	},
+	zoomInOut : function () {
+		var zoomIn = document.getElementById('controls5');
+		var zoomOut = document.getElementById('controls6');
+		var style = window.getComputedStyle(document.getElementById('controls6'));
+		if(style.getPropertyValue('display') === 'none'){
+			vPlayer.video.classList.add('zoomIn');
+			zoomIn.classList.add('hide');
+			zoomOut.classList.add('show');
+		} else {
+			vPlayer.video.classList.remove('zoomIn');
+			zoomIn.classList.remove('hide');
+			zoomOut.classList.remove('show');
+		}
 	},
 	stopEvents : function() {
 		var playButton = document.getElementById('controls3');
 		var pauseButton = document.getElementById('controls1');
 		var style = window.getComputedStyle(document.getElementById('controls3'));
 		if(style.getPropertyValue('display') === 'none'){
-			pauseButton.classList.add('playPauseVideo');
-			playButton.classList.add('playVideo');
+			pauseButton.classList.add('hide');
+			playButton.classList.add('show');
 		}
 	},
 	playListEvent : function () {

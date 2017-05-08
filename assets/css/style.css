@@ -6,9 +6,9 @@
 	overflow: hidden;
 }
  
-#videoPlayer {
-	max-width: 500px;
-    max-height: 284px;
+.videoPlayer {
+	width: 500px;
+    height: 284px;
 	position:absolute;
 }
 
@@ -93,10 +93,26 @@
     width: 40px;
     background: url('../images/icons.png') -65px 0;
 }
-.playPauseVideo {
+#controls5{
+	left: 440px;
+	width: 50px;
+    background: url('../images/zoominout.png') -80px -32px;
+}
+#controls6{
+	left: 440px;
+	width: 45px;
+	display : none;
+    background: url('../images/zoominout.png') -35px 4px;
+}
+.zoomIn {
+	width: 1024px !important;
+	height: 820px !important;
+	max-height: 820px !important;
+}
+.hide {
 	display : none !important;
 }
-.playVideo {
+.show {
 	display: block !important;
 }
 .progressBar {
