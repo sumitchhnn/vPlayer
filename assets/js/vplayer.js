@@ -42,6 +42,7 @@ vPlayer = {
 			pauseButton.classList.add('hide');
 			playButton.classList.add('show');
 		});
+		vPlayer.video.addEventListener('click', vPlayer.playPauseToggle);
 		vPlayer.video.addEventListener('ended', vPlayer.nextVideo);
 	},
 	vPlayerList : function () {
@@ -78,8 +79,8 @@ vPlayer = {
 		vPlayer.vPlayerContainer.onmouseout = vPlayer.hideControls;
 	},
 	initializeControls : function () {
-		document.getElementById('controls1').addEventListener('click', vPlayer.pauseVideo);
-		document.getElementById('controls3').addEventListener('click', vPlayer.playVideo);
+		document.getElementById('controls1').addEventListener('click', vPlayer.playPauseToggle);
+		document.getElementById('controls3').addEventListener('click', vPlayer.playPauseToggle);
 		document.getElementById('controls4').addEventListener('click', vPlayer.stopVideo);
 		document.getElementById('controls2').addEventListener('click', vPlayer.nextVideo);
 		document.getElementById('controls0').addEventListener('click', vPlayer.prevVideo);
@@ -87,16 +88,9 @@ vPlayer = {
 		document.getElementById('controls6').addEventListener('click', vPlayer.zoomInOut);
 		document.getElementById('progressBar').addEventListener('click',vPlayer.progressBarEvent);
 	},
-	pauseVideo : function () {
-		vPlayer.video.pause();
-		vPlayer.video.onpause = vPlayer.playPauseToggle();
-	},
-	playVideo : function () {
-		vPlayer.video.play();
-		vPlayer.video.onplay = vPlayer.playPauseToggle();
-	},
 	stopVideo : function () {
 		vPlayer.video.currentTime = vPlayer.video.duration + 1000;
+		vPlayer.video.removeEventListener('ended', vPlayer.nextVideo);
 		vPlayer.video.onended = vPlayer.stopEvents();
 	},
 	nextVideo : function () {
@@ -128,19 +122,32 @@ vPlayer = {
 		}
 	},
 	showControls : function () {
-		document.getElementById('controls').style.marginTop =  '-30px';
+		if(!vPlayer.vPlayerContainer.classList.contains('zoomIn')) {
+			document.getElementById('controls').style.marginTop =  '-30px';
+		} else {
+			document.getElementById('controls').style.marginTop =  '50vh';
+		}
 	},
 	hideControls : function () {
-		document.getElementById('controls').style.marginTop =  '29px';
+		if(!vPlayer.vPlayerContainer.classList.contains('zoomIn')) {
+			document.getElementById('controls').style.marginTop =  '29px';
+		} else {
+			document.getElementById('controls').style.marginTop =  '100vh';
+		}
 	},
 	playPauseToggle : function() {
 		var playButton = document.getElementById('controls3');
 		var pauseButton = document.getElementById('controls1');
 		var style = window.getComputedStyle(document.getElementById('controls3'));
 		if(style.getPropertyValue('display') === 'none'){
+			vPlayer.video.pause();
+			playButton.classList = '';
+			pauseButton.classList = '';
 			pauseButton.classList.add('hide');
 			playButton.classList.add('show');
 		} else {
+			vPlayer.video.play();
+			vPlayer.video.removeEventListener('ended', vPlayer.nextVideo);
 			pauseButton.classList.remove('hide');
 			playButton.classList.remove('show');
 		} 
@@ -150,10 +157,12 @@ vPlayer = {
 		var zoomOut = document.getElementById('controls6');
 		var style = window.getComputedStyle(document.getElementById('controls6'));
 		if(style.getPropertyValue('display') === 'none'){
+			vPlayer.vPlayerContainer.classList.add('zoomIn');
 			vPlayer.video.classList.add('zoomIn');
 			zoomIn.classList.add('hide');
 			zoomOut.classList.add('show');
 		} else {
+			vPlayer.vPlayerContainer.classList.remove('zoomIn');
 			vPlayer.video.classList.remove('zoomIn');
 			zoomIn.classList.remove('hide');
 			zoomOut.classList.remove('show');
@@ -162,6 +171,8 @@ vPlayer = {
 	stopEvents : function() {
 		var playButton = document.getElementById('controls3');
 		var pauseButton = document.getElementById('controls1');
+		playButton.classList = '';
+		pauseButton.classList = '';
 		var style = window.getComputedStyle(document.getElementById('controls3'));
 		if(style.getPropertyValue('display') === 'none'){
 			pauseButton.classList.add('hide');
@@ -170,11 +181,17 @@ vPlayer = {
 	},
 	playListEvent : function () {
 		var key ="";
+		var playButton = document.getElementById('controls3');
+		var pauseButton = document.getElementById('controls1');
 		for(var list in vPlayer.vplayerConfig.playList) {
 			if(vPlayer.vplayerConfig.playList[list] === this.children[0].innerText) {
 				key = list;
 			}
 		}
+		playButton.classList = '';
+		pauseButton.classList = '';
+		pauseButton.classList.add('show');
+		playButton.classList.add('hide');
 		vPlayer.video.children[0].attributes[0].value = vPlayer.vplayerConfig.sourcePath + vPlayer.vplayerConfig.playList[key];
 		vPlayer.video.load();
 		vPlayer.video.play();
@@ -184,7 +201,11 @@ vPlayer = {
 		var keys = Object.keys(vPlayer.vplayerConfig.playList);
 		for(var i = 0; i < keys.length; i++ ) {
 			if(keys[i] === currentKey) {
-				return keys[i+1];
+				if(i === keys.length - 1) {
+					return keys[0];
+				} else {
+					return keys[i+1];
+				}
 			}
 		}
 		return null;
@@ -194,7 +215,11 @@ vPlayer = {
 		var keys = Object.keys(vPlayer.vplayerConfig.playList);
 		for(var i = 0; i < keys.length; i++ ) {
 			if(keys[i] === currentKey) {
-				return keys[i-1];
+				if(i === 0) {
+					return keys[keys.length - 1];
+				} else {
+					return keys[i-1];
+				}
 			}
 		}
 		return null;
