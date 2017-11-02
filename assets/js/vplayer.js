@@ -74,7 +74,7 @@ vPlayer = {
 		progressBar.classList.add('progressBar');
 		progressBar.max = 100;
 		controlsContainer.appendChild(progressBar);
-		setInterval(vPlayer.updateProgressBar,1000);
+		setInterval(vPlayer.updateProgressBar);
 		vPlayer.vPlayerContainer.onmouseover = vPlayer.showControls;
 		vPlayer.vPlayerContainer.onmouseout = vPlayer.hideControls;
 	},
